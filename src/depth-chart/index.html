@@ -20,9 +20,6 @@
     constructor(props) {
       super(props);
       this.state = {
-        range: 1,
-        chartPrices: [],
-        chartShares: []
       };
       this.updateChart = this.updateChart.bind(this);
     }
@@ -34,13 +31,66 @@
         }
       });
 
-      this.orderBookChart = new Highcharts.Chart('order_book_chart', {
-        title: {
-          text: 'Depth Chart'
+      this.asksChart = new Highcharts.Chart('asks_chart', {
+        lang: {
+          thousandsSep: ',',
+          noData: 'No orders to display'
         },
-        chart: {
-          height: 100 // mirror this height in css container height declaration
+        yAxis: {
+          categories: this.props.orderBookSeries.length ? this.props.orderBookSeries.filter(function (e, i) {
+            return i === 1;
+          }) : [],
+          title: {
+            text: 'Shares Available'
+          }
         },
+        xAxis: {
+          categories: this.props.orderBookSeries.length ? this.props.orderBookSeries.filter(function (e, i) {
+            return i === 0;
+          }) : [],
+          title: {
+            text: 'Prices'
+          }
+        },
+        series: [
+          {
+            name: '',
+            type: 'area',
+            data: []
+          },
+          {
+            type: 'area',
+            name: '',
+            data: []
+          }
+        ],
+        rangeSelector: {
+          buttons: [{
+            type: 'hour',
+            count: 1,
+            text: '1h'
+          }, {
+            type: 'day',
+            count: 1,
+            text: '1D'
+          }, {
+            type: 'all',
+            count: 1,
+            text: 'All'
+          }]
+        },
+        tooltip: {
+          headerFormat: null,
+          pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y} Shares Available @ {point.x} ETH</b><br/>',
+          valueDecimals: 2
+        },
+        credits: {
+          enabled: false
+        },
+        type: 'area'
+      });
+
+    this.bidsChart = new Highcharts.Chart('bids_chart', {
         lang: {
           thousandsSep: ',',
           noData: 'No orders to display'
@@ -116,10 +166,11 @@
       const bidSeries = this.props.orderBookSeries.bids;
       const askSeries = this.props.orderBookSeries.asks;
 
-      this.orderBookChart.series[0].setData(bidSeries, false);
-      this.orderBookChart.series[1].setData(askSeries, false);
+      this.bidsChart.series[1].setData(bidSeries, false);
+      this.asksChart.series[0].setData(askSeries, false);
 
-      this.orderBookChart.redraw();
+      this.asksChart.redraw();
+      this.bidsChart.redraw();
     }
 
     render() {
@@ -128,7 +179,10 @@
               className="order-book-chart"
           >
             <div
-                id="order_book_chart"
+                id="bids_chart"
+            />
+            <div
+                id="asks_chart"
             />
           </article>
       );
