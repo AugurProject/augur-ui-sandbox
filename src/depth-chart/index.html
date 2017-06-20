@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8"/>
+  <title>Super Amazing Depth Chart</title>
+  <script src="https://unpkg.com/react@latest/dist/react.js"></script>
+  <script src="https://unpkg.com/react-dom@latest/dist/react-dom.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+  <script src="http://code.highcharts.com/highcharts.js"></script>
+</head>
+<body>
+<h1>Super Amazing Depth Chart</h1>
+<div id="root"></div>
+<script type="text/babel">
+  const orderBookSeries = {
+    bids: [[.5, 10], [.55, 11], [.56, 12], [.57, 12], [.58, 12], [.584, 12]],
+    asks: [[.6, 10], [.6, 11], [.6, 12], [.61, 12], [.65, 12], [.78, 12], [.7886, 10], [.95, 11], [.96, 12], [.97, 12], [.97, 12], [.99, 12]]
+  };
+  class OrderBookDepthChart extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = {
+        range: 1,
+        chartPrices: [],
+        chartShares: []
+      };
+      this.updateChart = this.updateChart.bind(this);
+    }
+
+    componentDidMount() {
+      Highcharts.setOptions({
+        lang: {
+          thousandsSep: ','
+        }
+      });
+
+      this.orderBookChart = new Highcharts.Chart('order_book_chart', {
+        title: {
+          text: 'Depth Chart'
+        },
+        chart: {
+          height: 100 // mirror this height in css container height declaration
+        },
+        lang: {
+          thousandsSep: ',',
+          noData: 'No orders to display'
+        },
+        yAxis: {
+          categories: this.props.orderBookSeries.length ? this.props.orderBookSeries.filter(function (e, i) {
+            return i === 1;
+          }) : [],
+          title: {
+            text: 'Shares Available'
+          }
+        },
+        xAxis: {
+          categories: this.props.orderBookSeries.length ? this.props.orderBookSeries.filter(function (e, i) {
+            return i === 0;
+          }) : [],
+          title: {
+            text: 'Prices'
+          }
+        },
+        series: [
+          {
+            name: '',
+            type: 'area',
+            data: []
+          },
+          {
+            type: 'area',
+            name: '',
+            data: []
+          }
+        ],
+        rangeSelector: {
+          buttons: [{
+            type: 'hour',
+            count: 1,
+            text: '1h'
+          }, {
+            type: 'day',
+            count: 1,
+            text: '1D'
+          }, {
+            type: 'all',
+            count: 1,
+            text: 'All'
+          }]
+        },
+        tooltip: {
+          headerFormat: null,
+          pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y} Shares Available @ {point.x} ETH</b><br/>',
+          valueDecimals: 2
+        },
+        credits: {
+          enabled: false
+        },
+        type: 'area'
+      });
+
+      window.addEventListener('resize', this.updateChart);
+
+      this.updateChart();
+    }
+
+    componentDidUpdate(prevProps) {
+      if (prevProps.orderBookSeries !== this.props.orderBookSeries) this.updateChart();
+    }
+
+    componentWillUnmount() {
+      window.removeEventListener('resize', this.updateChart);
+    }
+
+    updateChart() {
+      const bidSeries = this.props.orderBookSeries.bids;
+      const askSeries = this.props.orderBookSeries.asks;
+
+      this.orderBookChart.series[0].setData(bidSeries, false);
+      this.orderBookChart.series[1].setData(askSeries, false);
+
+      this.orderBookChart.redraw();
+    }
+
+    render() {
+      return (
+          <article
+              className="order-book-chart"
+          >
+            <div
+                id="order_book_chart"
+            />
+          </article>
+      );
+    }
+  }
+  ReactDOM.render(
+      <OrderBookDepthChart orderBookSeries={orderBookSeries}/>,
+    document.getElementById('root')
+  );
+</script>
+</body>
+</html>
