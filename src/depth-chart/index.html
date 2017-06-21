@@ -70,11 +70,15 @@
       this.depthChart = new Highcharts.Chart('depth_chart', {
         chart: {
           backgroundColor: 'lightgrey',
-//          height: 300,
-//          width: 500
+          height: 200,
+          width: 300
         },
         title: {
-          text: ''
+          text: '',
+          style: {
+            color: '#000',
+            fontSize: '11px'
+          }
         },
         lang: {
           thousandsSep: ',',
@@ -85,7 +89,7 @@
             text: ''
           },
           tickInterval: .05,
-          max: '1',
+          max: 1,
           labels: {
             rotation: 90
           }
@@ -93,7 +97,8 @@
         yAxis: {
           title: {
             text: ''
-          }
+          },
+          opposite: true
         },
         series: [
           {
@@ -162,6 +167,19 @@
       });
     }
 
+    getMidPoint(bids, asks) {
+
+      let maxBid = 0;
+      for (const bid of bids) {
+        if (bid[0] > maxBid) maxBid = bid[0];
+      }
+      let minAsk = 1;
+      for (const ask of asks) {
+        if (ask[0] < minAsk) minAsk = ask[0];
+      }
+      return maxBid + ((minAsk - maxBid) / 2);
+    }
+
     updateChart() {
       const bidData = this.props.orderBookSeries.bids;
       const askData = this.props.orderBookSeries.asks;
@@ -169,8 +187,10 @@
       const bidSeries = this.calcSideData(bidData, 'bids');
       const askSeries = this.calcSideData(askData, 'asks');
 
-      this.depthChart.series[0].setData(bidSeries, true);
-      this.depthChart.series[1].setData(askSeries, true);
+      const midPoint = this.getMidPoint(bidSeries, askSeries);
+      this.depthChart.setTitle({ text: 'MidPoint: ' + midPoint });
+      this.depthChart.series[0].setData(bidSeries, false);
+      this.depthChart.series[1].setData(askSeries, false);
 
       this.depthChart.redraw();
     }
