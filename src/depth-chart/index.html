@@ -34,20 +34,18 @@
     ]
   };
 
+//  import noData from 'highcharts/modules/no-data-to-display';
+
   class OrderBookDepthChart extends React.Component {
     constructor(props) {
       super(props);
-      this.state = {
-        prices: [],
-        cumShares: [],
-        maxShares: 100  // need max cumulative shares for scaling chart
-      };
+      this.state = {};
       this.updateChart = this.updateChart.bind(this);
       this.calcSideData = this.calcSideData.bind(this);
     }
 
     componentDidMount() {
-
+//      noData(Highcharts); when back in augur UI repo
       Highcharts.setOptions({
         lang: {
           thousandsSep: ','
@@ -55,7 +53,10 @@
       });
 
       this.depthChart = new Highcharts.Chart('depth_chart', {
-        type: 'line',
+        chart: {
+          height: 300,
+          width: 500
+        },
         title: {
           text: ''
         },
@@ -64,10 +65,10 @@
           noData: 'No orders to display'
         },
         xAxis: {
-          categories: ['0','.10','.2','0.3','0.4','0.5','0.6','0.7','0.8','0.9','1'],
           title: {
             text: 'Prices'
-          }
+          },
+          max: '1'
         },
         yAxis: {
           title: {
@@ -79,15 +80,13 @@
             showInLegend: false,
             name: '',
             type: 'line',
-            color: 'green',
-            data: []
+            color: 'green'
           },
           {
             showInLegend: false,
             name: '',
             type: 'line',
-            color: 'red',
-            data: []
+            color: 'red'
           }
         ],
         tooltip: {
@@ -112,10 +111,6 @@
       window.removeEventListener('resize', this.updateChart);
     }
 
-    calcCumSharesForSeries() {
-
-    }
-
     calcSideData(sideSeries, side) {
 
       if (side === 'asks')  {
@@ -130,20 +125,21 @@
       const data = [];
       const firstShares = sideSeries[0][1];
       const firstPrice = sideSeries[0][0];
-      data.push([firstPrice, firstShares]);  // seed so we have the first cumulative numShares
+      data.push([firstPrice, firstShares]);// seed so we have the first cumulative numShares
 
       for (let i = 1; i < sideSeries.length; i++) {
         const order = [];
         const price = sideSeries[i][0];
-        order.push(price); // push price
+        order.push(price);
         const currentShares = sideSeries[i][1];
         const currentCumShares = currentShares + data[i - 1][1];
         order.push(currentCumShares);
         data.push(order);
       }
 
-//      Sort by price here for Highcharts
-      return data.sort(function (a, b) {a[0] - b[0]});
+      return data.sort(function (a, b) {
+        return a[0] - b[0];
+      });
     }
 
     updateChart() {
@@ -160,6 +156,8 @@
     }
 
     render() {
+      const p = this.props;
+
       return (
           <article
               className="order-book-chart"
@@ -173,7 +171,7 @@
     }
   }
   ReactDOM.render(
-      <OrderBookDepthChart orderBookSeries={orderBookSeries}/>,
+    <OrderBookDepthChart rotation={'90'} orderBookSeries={orderBookSeries} />,
     document.getElementById('root')
   );
 </script>
