@@ -8,7 +8,7 @@
   <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
   <script src="http://code.highcharts.com/highcharts.js"></script>
 </head>
-<body>
+<body style="background-color: lightgrey">
 <div id="root"></div>
 <script type="text/babel">
   //  Prices must be sorted for highcharts
@@ -73,17 +73,27 @@
 
       this.depthChart = new Highcharts.Chart('depth_chart', {
         chart: {
-          backgroundColor: 'lightgrey',
+          backgroundColor: 'white',
           height: 300,
           width: 300,
+          margin: 40,
           type: 'bar',
+          plotOptions: {
+            series: {
+              fillOpacity: 0.1
+            }
+          }
         },
         title: {
           text: '',
           style: {
-            color: '#000',
+            color: '#3F1B76',
             fontSize: '11px'
-          }
+          },
+          align: 'right',
+          x: -180,
+          verticalAlign: 'bottom',
+          y: -150,
         },
         lang: {
           thousandsSep: ',',
@@ -95,9 +105,6 @@
           },
           tickInterval: .05,
           max: 1,
-          labels: {
-            rotation: 90
-          },
           opposite: true
         },
         yAxis: [{
@@ -112,13 +119,15 @@
             showInLegend: false,
             name: '',
             type: 'line',
-            color: 'red'
+            color: '#3F1B76',
+            lineWidth: 3
           },
           {
             showInLegend: false,
             name: '',
             type: 'line',
-            color: 'green'
+            color: '#C59FFF',
+            lineWidth: 3
           }
         ],
         tooltip: {
@@ -193,7 +202,7 @@
       const askSeries = this.calcSideData(askData, 'asks');
 
       const midPoint = this.getMidPoint(bidSeries, askSeries);
-      this.depthChart.setTitle({ text: 'MidPoint: ' + midPoint });
+      this.depthChart.setTitle({ text: midPoint });
       this.depthChart.series[1].setData(askSeries, false);
       this.depthChart.series[0].setData(bidSeries, false);
 
