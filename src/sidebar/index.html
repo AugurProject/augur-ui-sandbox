@@ -27,41 +27,53 @@
           super(props);
           this.state = {
             selectedTopic: props.data.topics[0],
-            contentClass: 'page-content isOpen',
+            nextTopic: props.data.topics[0],
+            contentClass: 'page-content',
+            optionBarClass: 'options-bar isOpen',
             topicClass: 'topic-list isOpen',
             subTopicClass: 'sub-topic-list isOpen',
             sideBarClass: 'side-bar isOpen',
             isOpen: true,
+            toggleSubTopic: false,
           };
           this.toggleSidebar = this.toggleSidebar.bind(this);
         }
 
-        toggleSidebar() {
-          if (this.state.isOpen) {
-            this.setState({ contentClass: 'page-content', topicClass: 'topic-list', subTopicClass: 'sub-topic-list', sideBarClass: 'side-bar', isOpen: false });
-          } else {
-            this.setState({ contentClass: 'page-content isOpen', topicClass: 'topic-list isOpen', subTopicClass: 'sub-topic-list isOpen', sideBarClass: 'side-bar isOpen', isOpen: true });
+        componentDidUpdate() {
+          if (this.state.toggleSubTopic) {
+            setTimeout(() => {
+              let selectedTopic = this.state.nextTopic;
+              this.setState({ selectedTopic: selectedTopic, toggleSubTopic: false, topicClass: 'topic-list isOpen', subTopicClass: 'sub-topic-list isOpen', optionBarClass: 'options-bar isOpen', sideBarClass: 'side-bar isOpen' });
+            }, 250)
           }
         }
 
-        toggleSubTopics(topic) {
-          this.setState({ selectedTopic: topic });
+        toggleSidebar() {
+          if (this.state.isOpen) {
+            this.setState({ optionBarClass: 'options-bar', topicClass: 'topic-list', subTopicClass: 'sub-topic-list', sideBarClass: 'side-bar', isOpen: false });
+          } else {
+            this.setState({ optionBarClass: 'options-bar isOpen', topicClass: 'topic-list isOpen', subTopicClass: 'sub-topic-list isOpen', sideBarClass: 'side-bar isOpen', isOpen: true });
+          }
+        }
+
+        toggleSubTopics = topic => {
+          this.setState({ nextTopic: topic, toggleSubTopic: true, topicClass: 'topic-list isHalfOpen', subTopicClass: 'sub-topic-list isClosed', optionBarClass: 'options-bar isOpen', sideBarClass: 'side-bar isHalfOpen' });
         }
 
         render() {
           const p = this.props.data;
           const s = this.state;
-          console.log(p, s);
           return (
               <article className="page-container">
+
                 <aside className={s.sideBarClass}>
-                    <div className='options-bar'>
+                    <div className={s.optionBarClass}>
                       <a className="button" onClick={this.toggleSidebar}>topics</a>
                     </div>
                     <ul className={s.topicClass}>
                       {
                         p.topics.map(topic => {
-                        return (<li key={topic}><a className="button" onClick={this.toggleSubTopics.bind(this, topic)}>{topic}</a></li>)
+                        return (<li key={topic}><a className="button" onClick={() => this.toggleSubTopics(topic)}>{topic}</a></li>)
                       })
                       }
                     </ul>
