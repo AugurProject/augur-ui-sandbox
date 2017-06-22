@@ -11,7 +11,7 @@
 <body style="background-color: lightgrey">
 <div id="root"></div>
 <script type="text/babel">
-  //  Prices must be sorted for highcharts
+  //  TODO Render both lines at the same time
   const shortBook = {
     bids: [
       [.02, 200],
@@ -67,13 +67,6 @@
       [.02, 200],
       [.05, 20],
       [.10, 120],
-      [.12, 1430],
-      [.13, 130],
-      [.14, 130],
-      [.17, 140],
-      [.20, 1230],
-      [.30, 1],
-      [.40, 10],
       [.43, 150],
       [.44, 150]
     ],
@@ -87,27 +80,22 @@
     ]
   };
 
-  const orderBook = Math.random() > .495  ? orderBookOne : orderBookTwo;
+  const orderBook = Math.random() > .4999 ? orderBookOne : orderBookTwo;
 //  import noData from 'highcharts/modules/no-data-to-display';
   class OrderBookDepthChart extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
-        orderBook: []
+        orderBook: [],
+//        titleXOffset: 0,
+//        titleYOffset: 0,
+//        midPoint: 0
       };
       this.updateChart = this.updateChart.bind(this);
       this.calcSideData = this.calcSideData.bind(this);
     }
 
-    tick () {
-      this.setState({orderBook: orderBook});
-    }
-
     componentDidMount() {
-
-      this.interval = setInterval(() => {
-        this.forceUpdate();
-      }, 3000);
 
 //      noData(Highcharts); when back in augur UI repo
       Highcharts.setOptions({
@@ -118,9 +106,9 @@
 
       this.depthChart = new Highcharts.Chart('depth_chart', {
         chart: {
-          backgroundColor: 'white',
+          backgroundColor: 'lightgrey',
           height: 300,
-          width: 250,
+          width: 300,
           margin: 60,
           type: 'bar',
         },
@@ -145,6 +133,7 @@
           },
           tickInterval: .50,
           max: 1,
+          reverse: true
         },
         yAxis: {
           title: {
@@ -240,8 +229,8 @@
 
       const midPoint = this.getMidPoint(bidSeries, askSeries);
       this.depthChart.setTitle({ text: midPoint });
-      this.depthChart.series[0].setData(bidSeries, false);
-      this.depthChart.series[1].setData(askSeries, false);
+      this.depthChart.series[0].setData(askSeries, true);
+      this.depthChart.series[1].setData(bidSeries, true);
 
       this.depthChart.redraw();
     }
