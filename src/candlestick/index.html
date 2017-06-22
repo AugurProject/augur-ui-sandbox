@@ -78,6 +78,8 @@
         series: [{
           type: 'candlestick',
           name: '',
+          color: '#ef5134',
+          upColor: '#67eec6',
           dataGrouping: {
             units: [
               [
@@ -104,9 +106,7 @@
     }
 
     updateChart() {
-      const data = this.props.orderBook;
-
-      this.depthChart.series[0].setData(data, true);
+      this.depthChart.series[0].setData(this.props.orderBook, true);
       this.depthChart.redraw();
     }
 
