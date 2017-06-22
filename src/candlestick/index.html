@@ -81,9 +81,12 @@
           // If this is to high we will select an option that doesn't exist because some markets will not last long
           selected: 0
         },
+        lang: {
+          noData: 'No Chart Data',
+        },
         borderWidth: 0,
         title: {
-          text: 'Will the World End by December 31st, 2017'
+          text: 'Historical Data for \"Will the World End by December 31st, 2017\"'
         },
         plotOptions: {
           allowPointSelect: true
@@ -154,7 +157,7 @@
       const volumeData = [];
       for (let i = 0; i < orderBook.length; i++) {
         const volumeForDate = [];
-        volumeForDate.push([orderBook[i][0], orderBook[i][5]]);
+        volumeForDate.push(orderBook[i][0], orderBook[i][5]);
         volumeData.push(volumeForDate);
       }
       return volumeData;
@@ -162,8 +165,8 @@
 
     updateChart() {
       this.candleStickChart.series[0].setData(this.props.orderBook, false);
-      const volume = this.getVolumeFromOrderBook(this.props.orderBook);
-      this.candleStickChart.series[1].setData(volume, false);
+      const volumeData = this.getVolumeFromOrderBook(this.props.orderBook);
+      this.candleStickChart.series[1].setData(volumeData, false);
       this.candleStickChart.redraw();
     }
 
