@@ -75,13 +75,13 @@
 
     componentDidMount() {
 //      noData(Highcharts); when back in augur UI repo
-      this.depthChart = new Highcharts.stockChart('candlestick_chart', {
+      this.candleStickChart = new Highcharts.stockChart('candlestick_chart', {
         rangeSelector: {
           // index of range selector to default to.
           // If this is to high we will select an option that doesn't exist because some markets will not last long
           selected: 0
         },
-
+        borderWidth: 0,
         title: {
           text: 'Will the World End by December 31st, 2017'
         },
@@ -119,7 +119,6 @@
           lineColor: '#ef5134',
           upColor: '#67eec6',
           upLineColor: '#67eec6',
-          yAxis: 0,
           dataGrouping: {
             units: [
               [
@@ -147,6 +146,7 @@
 
     componentWillUnmount() {
       window.removeEventListener('resize', this.updateChart);
+      this.chart.destroy();
     }
 
     getVolumeFromOrderBook(orderBook) {
@@ -161,10 +161,10 @@
     }
 
     updateChart() {
-      this.depthChart.series[0].setData(this.props.orderBook, false);
+      this.candleStickChart.series[0].setData(this.props.orderBook, false);
       const volume = this.getVolumeFromOrderBook(this.props.orderBook);
-      this.depthChart.series[1].setData(volume, false);
-      this.depthChart.redraw();
+      this.candleStickChart.series[1].setData(volume, false);
+      this.candleStickChart.redraw();
     }
 
     render() {
