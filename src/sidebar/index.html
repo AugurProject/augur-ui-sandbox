@@ -1,9 +1,89 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="UTF-8"/>
     <title>Sidebar Test</title>
+    <link rel="stylesheet" href="./styles.css">
   </head>
   <body>
     <h1>Sidebar Test</h1>
+    <div id="root"></div>
+    <script src="https://unpkg.com/react@latest/dist/react.js"></script>
+    <script src="https://unpkg.com/react-dom@latest/dist/react-dom.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+    <script type="text/babel">
+      const data = {
+        topics: ['finance', 'ethereum', 'sports', 'politics', 'science'],
+        subTopics: {
+          'finance': [ 'Trading', 'Forex', 'Crypto', 'USD', 'EUR' ],
+          'ethereum': [ 'ICOs', 'ERC-20', 'Ether', 'GAS Prices', 'PoS' ],
+          'sports': [ 'Football', 'Baseball', 'Soccer', 'Hockey', 'Tennis' ],
+          'politics': [ 'Trump', 'Republicans', 'Democrats', 'Healthcare', 'SCOTUS' ],
+          'science': [ 'Geology', 'Biology', 'Chemistry', 'Physics', 'Astrophysics']
+        }
+      };
+      class SideBar extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            selectedTopic: props.data.topics[0],
+            contentClass: 'page-content isOpen',
+            topicClass: 'topic-list isOpen',
+            subTopicClass: 'sub-topic-list isOpen',
+            sideBarClass: 'side-bar isOpen',
+            isOpen: true,
+          };
+          this.toggleSidebar = this.toggleSidebar.bind(this);
+        }
+
+        toggleSidebar() {
+          if (this.state.isOpen) {
+            this.setState({ contentClass: 'page-content', topicClass: 'topic-list', subTopicClass: 'sub-topic-list', sideBarClass: 'side-bar', isOpen: false });
+          } else {
+            this.setState({ contentClass: 'page-content isOpen', topicClass: 'topic-list isOpen', subTopicClass: 'sub-topic-list isOpen', sideBarClass: 'side-bar isOpen', isOpen: true });
+          }
+        }
+
+        toggleSubTopics(topic) {
+          this.setState({ selectedTopic: topic });
+        }
+
+        render() {
+          const p = this.props.data;
+          const s = this.state;
+          console.log(p, s);
+          return (
+              <article className="page-container">
+                <aside className={s.sideBarClass}>
+                    <div className='options-bar'>
+                      <a className="button" onClick={this.toggleSidebar}>topics</a>
+                    </div>
+                    <ul className={s.topicClass}>
+                      {
+                        p.topics.map(topic => {
+                        return (<li key={topic}><a className="button" onClick={this.toggleSubTopics.bind(this, topic)}>{topic}</a></li>)
+                      })
+                      }
+                    </ul>
+                    <ul className={s.subTopicClass}>
+                      {
+                        p.subTopics[s.selectedTopic].map(subTopic => {
+                        return (<li key={subTopic}>{subTopic}</li>)
+                      })
+                      }
+                    </ul>
+                </aside>
+                <div ref="content" className={s.contentClass}>
+                  <p>Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content</p>
+                </div>
+              </article>
+          );
+        }
+      };
+      ReactDOM.render(
+          <SideBar data={data}/>,
+        document.getElementById('root')
+      );
+    </script>
   </body>
 </html>

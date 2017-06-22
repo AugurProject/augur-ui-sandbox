@@ -1,0 +1,96 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+ul {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+}
+
+body {
+  overflow-x: hidden;
+}
+/* overall container */
+.page-container {
+  display: flex;
+  flex-flow: row nowrap;
+  min-height: 100%;
+  overflow: hidden;
+}
+/* whole sidebar */
+.side-bar {
+  background-color: #8261d4;
+  color: #fff;
+  flex: 1;
+  display: flex;
+  flex-flow: row nowrap;
+  overflow: hidden;
+  transition: all .3s;
+}
+.side-bar.isOpen {
+  flex: 3;
+}
+.button {
+  cursor: pointer;
+  margin: .25em;
+}
+/* div containing topics button */
+.options-bar {
+  flex: 1;
+}
+/* topics ul */
+.topic-list {
+  flex: 0;
+  visibility: 0;
+  opacity: 0;
+  background-color: #9150c3;
+  transition: opacity .1s, visibility .1s, flex .3s;
+}
+.topic-list > li {
+  margin: .25em;
+}
+.topic-list.isOpen {
+  flex: 1;
+  visibility: 1;
+  opacity: 1;
+}
+/* sub topics ul*/
+.sub-topic-list {
+  flex: 0;
+  visibility: 0;
+  opacity: 0;
+  background-color: #9150c3;
+  transition: opacity .1s, visibility .1s, flex .3s;
+}
+.sub-topic-list > li {
+  margin: .25em;
+}
+.sub-topic-list.isOpen {
+  flex: 1;
+  visibility: 1;
+  opacity: 1;
+  transition: all .3s;
+}
+/* main page content */
+.page-content {
+  flex: 19;
+  padding: 30px;
+  background: #eee;
+  transition: all .3s;
+}
+.page-content.isOpen {
+  flex: 17;
+  padding: 30px;
+  background: #eee;
+  transition: all .3s;
+}
