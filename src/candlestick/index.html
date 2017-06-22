@@ -98,7 +98,7 @@
     }
 
     componentDidUpdate(prevProps) {
-      if (prevProps.orderBook !== <this className="props orderBook"></this>) this.updateChart();
+      if (prevProps.orderBook !== this.props.orderBook) this.updateChart();
     }
 
     componentWillUnmount() {
