@@ -58,7 +58,7 @@
   ];
 //  import noData from 'highcharts/modules/no-data-to-display';
 
-  class OrderBookDepthChart extends React.Component {
+  class CandleStickChart extends React.Component {
     constructor(props) {
       super(props);
     }
@@ -98,7 +98,7 @@
     }
 
     componentDidUpdate(prevProps) {
-      if (prevProps.orderBookSeries !== this.props.orderBookSeries) this.updateChart();
+      if (prevProps.orderBook !== <this className="props orderBook"></this>) this.updateChart();
     }
 
     componentWillUnmount() {
