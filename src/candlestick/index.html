@@ -11,7 +11,7 @@
 <body>
 <div id="root"></div>
 <script type="text/babel">
-  const candleStickOrderBook =[
+  const candleStickOrderBook = [
     [1277942400000,36.33,36.40,34.75,35.50],
     [1278028800000,35.78,35.85,34.74,35.28],
     [1278374400000,35.86,36.11,35.17,35.52],
@@ -61,13 +61,11 @@
   class OrderBookDepthChart extends React.Component {
     constructor(props) {
       super(props);
-      this.state = {};
-      this.updateChart = this.updateChart.bind(this);
-      this.calcSideData = this.calcSideData.bind(this);
     }
 
     componentDidMount() {
 //      noData(Highcharts); when back in augur UI repo
+
       this.depthChart = new Highcharts.stockChart('candlestick_chart', {
         rangeSelector: {
           selected: 1
@@ -105,12 +103,8 @@
       window.removeEventListener('resize', this.updateChart);
     }
 
-    calcSideData(sideSeries, side) {
-
-    }
-
     updateChart() {
-      const data = this.props.candleStickData;
+      const data = this.props.orderBook;
 
       this.depthChart.series[0].setData(data, true);
       this.depthChart.redraw();
@@ -131,7 +125,7 @@
     }
   }
   ReactDOM.render(
-      <OrderBookDepthChart orderBookSeries={candleStickOrderBook}/>,
+      <OrderBookDepthChart orderBook={candleStickOrderBook}/>,
     document.getElementById('root')
   );
 </script>
