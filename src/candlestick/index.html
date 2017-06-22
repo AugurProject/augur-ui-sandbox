@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8"/>
+  <title>CandleStick Chart</title>
+  <script src="https://unpkg.com/react@latest/dist/react.js"></script>
+  <script src="https://unpkg.com/react-dom@latest/dist/react-dom.js"></script>
+  <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+  <script src="https://code.highcharts.com/stock/highstock.js"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+  const candleStickOrderBook =[
+    [1277942400000,36.33,36.40,34.75,35.50],
+    [1278028800000,35.78,35.85,34.74,35.28],
+    [1278374400000,35.86,36.11,35.17,35.52],
+    [1278460800000,35.78,36.97,35.68,36.95],
+    [1278547200000,37.50,37.56,36.41,36.87],
+    [1278633600000,36.70,37.13,36.45,37.09],
+    [1278892800000,36.93,37.41,36.41,36.76],
+    [1278979200000,36.62,36.63,35.20,35.97],
+    [1279065600000,35.63,36.54,35.57,36.10],
+    [1279152000000,35.46,36.71,35.33,35.92],
+    [1279238400000,36.17,36.42,35.49,35.70],
+    [1279497600000,35.70,35.70,34.23,35.08],
+    [1279584000000,34.70,36.13,34.29,35.98],
+    [1279670400000,37.87,37.88,36.29,36.32],
+    [1279756800000,36.81,37.14,36.47,37.00],
+    [1279843200000,36.73,37.20,36.61,37.13],
+    [1280102400000,37.14,37.16,36.82,37.04],
+    [1280188800000,37.27,37.83,37.19,37.73],
+    [1280275200000,37.67,38.00,37.18,37.28],
+    [1280361600000,37.24,37.52,36.59,36.87],
+    [1280448000000,36.56,37.10,36.41,36.75],
+    [1280707200000,37.21,37.51,37.09,37.41],
+    [1280793600000,37.29,37.61,37.06,37.42],
+    [1280880000000,37.55,37.75,37.19,37.57],
+    [1280966400000,37.39,37.60,37.22,37.39],
+    [1281052800000,37.11,37.36,36.80,37.16],
+    [1281312000000,37.35,37.45,37.08,37.39],
+    [1281398400000,37.12,37.21,36.79,37.06],
+    [1281484800000,36.49,36.53,35.69,35.74],
+    [1281571200000,35.24,36.16,35.16,35.97],
+    [1281657600000,35.95,35.98,35.58,35.59],
+    [1281916800000,35.37,35.72,35.23,35.38],
+    [1282003200000,35.73,36.38,35.60,36.00],
+    [1282089600000,36.05,36.38,35.94,36.15],
+    [1282176000000,36.12,36.21,35.53,35.70],
+    [1282262400000,35.63,36.27,35.57,35.66],
+    [1282521600000,35.97,36.00,35.04,35.11],
+    [1282608000000,34.67,34.71,34.09,34.28],
+    [1282694400000,34.01,34.86,33.89,34.70],
+    [1282780800000,35.06,35.11,34.33,34.33],
+    [1282867200000,34.54,34.66,33.65,34.52],
+    [1283126400000,34.39,35.11,34.38,34.64],
+    [1283212800000,34.55,34.94,34.34,34.73]
+  ];
+//  import noData from 'highcharts/modules/no-data-to-display';
+
+  class OrderBookDepthChart extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = {};
+      this.updateChart = this.updateChart.bind(this);
+      this.calcSideData = this.calcSideData.bind(this);
+    }
+
+    componentDidMount() {
+//      noData(Highcharts); when back in augur UI repo
+      this.depthChart = new Highcharts.stockChart('candlestick_chart', {
+        rangeSelector: {
+          selected: 1
+        },
+
+        title: {
+          text: 'Will the World End by December 31st, 2017'
+        },
+
+        series: [{
+          type: 'candlestick',
+          name: '',
+          dataGrouping: {
+            units: [
+              [
+                'week',
+                [1]
+              ], [
+                'month',
+                [1, 2, 3]
+              ]
+            ]
+          }
+        }]
+      });
+
+      this.updateChart();
+    }
+
+    componentDidUpdate(prevProps) {
+      if (prevProps.orderBookSeries !== this.props.orderBookSeries) this.updateChart();
+    }
+
+    componentWillUnmount() {
+      window.removeEventListener('resize', this.updateChart);
+    }
+
+    calcSideData(sideSeries, side) {
+
+    }
+
+    updateChart() {
+      const data = this.props.candleStickData;
+
+      this.depthChart.series[0].setData(data, true);
+      this.depthChart.redraw();
+    }
+
+    render() {
+      const p = this.props;
+
+      return (
+          <article
+              className="order-book-chart"
+          >
+            <div
+                id="candlestick_chart"
+            />
+          </article>
+      );
+    }
+  }
+  ReactDOM.render(
+      <OrderBookDepthChart orderBookSeries={candleStickOrderBook}/>,
+    document.getElementById('root')
+  );
+</script>
+</body>
+</html>
