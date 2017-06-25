@@ -27,57 +27,58 @@
           super(props);
           this.state = {
             selectedTopic: props.data.topics[0],
-            nextTopic: props.data.topics[0],
-            contentClass: 'page-content',
-            optionBarClass: 'options-bar isOpen',
-            topicClass: 'topic-list isOpen',
-            subTopicClass: 'sub-topic-list isOpen',
-            sideBarClass: 'side-bar isOpen',
-            isOpen: true,
-            toggleSubTopic: false,
+            topicClass: 'topic-list',
+            subTopicClass: 'sub-topic-list',
+            sideBarClass: 'side-bar',
+            isOpen: false,
+            togglingSubMenu: false,
           };
           this.toggleSidebar = this.toggleSidebar.bind(this);
         }
 
         componentDidUpdate() {
-          if (this.state.toggleSubTopic) {
-            setTimeout(() => {
-              let selectedTopic = this.state.nextTopic;
-              this.setState({ selectedTopic: selectedTopic, toggleSubTopic: false, topicClass: 'topic-list isOpen', subTopicClass: 'sub-topic-list isOpen', optionBarClass: 'options-bar isOpen', sideBarClass: 'side-bar isOpen' });
-            }, 250)
+          const s = this.state;
+          const stl = this.subTopicList;
+          if (s.togglingSubMenu) {
+            stl.addEventListener('animationend', () => {
+              this.setState({ togglingSubMenu: false, subTopicClass: 'sub-topic-list isOpen' });
+            }, false);
           }
         }
 
         toggleSidebar() {
-          if (this.state.isOpen) {
-            this.setState({ optionBarClass: 'options-bar', topicClass: 'topic-list', subTopicClass: 'sub-topic-list', sideBarClass: 'side-bar', isOpen: false });
-          } else {
-            this.setState({ optionBarClass: 'options-bar isOpen', topicClass: 'topic-list isOpen', subTopicClass: 'sub-topic-list isOpen', sideBarClass: 'side-bar isOpen', isOpen: true });
+          if (!this.state.togglingSubMenu) {
+            if (this.state.isOpen) {
+              this.setState({ topicClass: 'topic-list', subTopicClass: 'sub-topic-list', sideBarClass: 'side-bar', isOpen: false, });
+            } else {
+              this.setState({ topicClass: 'topic-list isOpen', subTopicClass: 'sub-topic-list isOpen', sideBarClass: 'side-bar isOpen', isOpen: true, });
+            }
           }
         }
 
         toggleSubTopics = topic => {
-          this.setState({ nextTopic: topic, toggleSubTopic: true, topicClass: 'topic-list isHalfOpen', subTopicClass: 'sub-topic-list isClosed', optionBarClass: 'options-bar isOpen', sideBarClass: 'side-bar isHalfOpen' });
+          this.setState({ selectedTopic: topic, subTopicClass: 'sub-topic-list slide' ,togglingSubMenu: true, animationLock: true });
         }
 
         render() {
           const p = this.props.data;
           const s = this.state;
+
           return (
               <article className="page-container">
 
-                <aside className={s.sideBarClass}>
-                    <div className={s.optionBarClass}>
+                <aside ref={(ref) => this.sideBar = ref} className={s.sideBarClass}>
+                    <div className='options-bar'>
                       <a className="button" onClick={this.toggleSidebar}>topics</a>
                     </div>
-                    <ul className={s.topicClass}>
+                    <ul ref={(ref) => this.topicList = ref} className={s.topicClass}>
                       {
                         p.topics.map(topic => {
                         return (<li key={topic}><a className="button" onClick={() => this.toggleSubTopics(topic)}>{topic}</a></li>)
                       })
                       }
                     </ul>
-                    <ul className={s.subTopicClass}>
+                    <ul ref={(ref) => this.subTopicList = ref} className={s.subTopicClass}>
                       {
                         p.subTopics[s.selectedTopic].map(subTopic => {
                         return (<li key={subTopic}>{subTopic}</li>)
@@ -85,7 +86,7 @@
                       }
                     </ul>
                 </aside>
-                <div ref="content" className={s.contentClass}>
+                <div ref="content" className='page-content'>
                   <p>Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content</p>
                 </div>
               </article>
