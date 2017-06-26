@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8"/>
     <title>Sidebar Test</title>
-    <link rel="stylesheet" href="./styles.css">
+    <link rel="stylesheet" href="./sidebar.css">
   </head>
   <body>
     <h1>Sidebar Test</h1>
@@ -27,37 +27,61 @@
           super(props);
           this.state = {
             selectedTopic: props.data.topics[0],
-            topicClass: 'topic-list',
-            subTopicClass: 'sub-topic-list',
+            isMenuOpen: false,
+            slidingSubMenu: false,
             sideBarClass: 'side-bar',
-            isOpen: false,
-            togglingSubMenu: false,
+            optionsBarClass: 'options-bar',
+            slidingContainerClass: 'sliding-container',
+            menuClass: 'menu',
+            subMenuClass: 'sub-menu',
           };
-          this.toggleSidebar = this.toggleSidebar.bind(this);
+          this.slideContainer = this.slideContainer.bind(this);
         }
 
         componentDidUpdate() {
           const s = this.state;
           const stl = this.subTopicList;
-          if (s.togglingSubMenu) {
+
+          if (s.slidingSubMenu) {
             stl.addEventListener('animationend', () => {
-              this.setState({ togglingSubMenu: false, subTopicClass: 'sub-topic-list isOpen' });
+              this.setState({
+                slidingSubMenu: false,
+                subMenuClass: 'sub-menu isOpen'
+              });
             }, false);
           }
         }
 
-        toggleSidebar() {
-          if (!this.state.togglingSubMenu) {
-            if (this.state.isOpen) {
-              this.setState({ topicClass: 'topic-list', subTopicClass: 'sub-topic-list', sideBarClass: 'side-bar', isOpen: false, });
+        slideContainer() {
+          if (!this.state.slidingSubMenu) {
+            if (this.state.isMenuOpen) {
+              this.setState({
+                isMenuOpen: false,
+                sideBarClass: 'side-bar',
+                optionsBarClass: 'options-bar',
+                slidingContainerClass: 'sliding-container',
+                menuClass: 'menu',
+                subMenuClass: 'sub-menu',
+              });
             } else {
-              this.setState({ topicClass: 'topic-list isOpen', subTopicClass: 'sub-topic-list isOpen', sideBarClass: 'side-bar isOpen', isOpen: true, });
+              this.setState({
+                isMenuOpen: true,
+                sideBarClass: 'side-bar isOpen',
+                optionsBarClass: 'options-bar isOpen',
+                slidingContainerClass: 'sliding-container isOpen',
+                menuClass: 'menu isOpen',
+                subMenuClass: 'sub-menu isOpen',
+              });
             }
           }
         }
 
         toggleSubTopics = topic => {
-          this.setState({ selectedTopic: topic, subTopicClass: 'sub-topic-list slide' ,togglingSubMenu: true, animationLock: true });
+          this.setState({
+            selectedTopic: topic,
+            slidingSubMenu: true,
+            subMenuClass: 'sub-menu slide'
+          });
         }
 
         render() {
@@ -66,25 +90,26 @@
 
           return (
               <article className="page-container">
-
-                <aside ref={(ref) => this.sideBar = ref} className={s.sideBarClass}>
-                    <div className='options-bar'>
-                      <a className="button" onClick={this.toggleSidebar}>topics</a>
-                    </div>
-                    <ul ref={(ref) => this.topicList = ref} className={s.topicClass}>
-                      {
-                        p.topics.map(topic => {
-                        return (<li key={topic}><a className="button" onClick={() => this.toggleSubTopics(topic)}>{topic}</a></li>)
-                      })
-                      }
-                    </ul>
-                    <ul ref={(ref) => this.subTopicList = ref} className={s.subTopicClass}>
-                      {
-                        p.subTopics[s.selectedTopic].map(subTopic => {
-                        return (<li key={subTopic}>{subTopic}</li>)
-                      })
-                      }
-                    </ul>
+                <aside className={s.sideBarClass}>
+                  <aside className='options-bar'>
+                    <a className="button" onClick={this.slideContainer}>topics</a>
+                  </aside>
+                  <div className={s.slidingContainerClass}>
+                      <ul className={s.menuClass}>
+                        {
+                          p.topics.map(topic => {
+                          return (<li key={topic}><a className="button" onClick={() => this.toggleSubTopics(topic)}>{topic}</a></li>)
+                        })
+                        }
+                      </ul>
+                      <ul ref={(ref) => this.subTopicList = ref} className={s.subMenuClass}>
+                        {
+                          p.subTopics[s.selectedTopic].map(subTopic => {
+                          return (<li key={subTopic}>{subTopic}</li>)
+                        })
+                        }
+                      </ul>
+                  </div>
                 </aside>
                 <div ref="content" className='page-content'>
                   <p>Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content</p>

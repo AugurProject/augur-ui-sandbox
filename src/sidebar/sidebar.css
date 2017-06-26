@@ -1,0 +1,103 @@
+/* common */
+* {
+  margin: 0;
+  padding: 0;
+}
+
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+ul {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+}
+li {
+  margin: 0 .25em;
+}
+/* animations */
+@keyframes sub-topic-slide {
+  0% {transform: translate3d(0, 0, 0);}
+  50% {transform: translate3d(-500%, 0, 0);}
+  100% {transform: translate3d(0, 0, 0);}
+}
+/* static classes */
+.page-container {
+  display: flex;
+  flex-flow: row nowrap;
+  min-height: 100%;
+  overflow: hidden;
+}
+.button {
+  cursor: pointer;
+  margin: .25em;
+}
+.page-content {
+  background-color: #ccc;
+  flex: 1 1 95%;
+  padding: 1em;
+}
+.options-bar {
+  background-color: darkviolet;
+  flex: 0 0 75px;
+  z-index: 5;
+}
+/* classes with modifiers */
+.side-bar {
+  display: flex;
+  flex-flow: row nowrap;
+  overflow: hidden;
+  background-color: #ccc;
+  flex: 0 0 75px;
+  transition: .5s;
+  color: white;
+}
+.side-bar.isOpen{
+  display: flex;
+  flex-flow: row nowrap;
+  overflow: hidden;
+  background-color: #ccc;
+  flex: 1 0 20em;
+  transition: .5s;
+}
+.sliding-container {
+  background-color: #ccc;
+  flex: 0;
+  display: flex;
+  flex-flow: row nowrap;
+  overflow: hidden;
+  transition: all .4s;
+}
+.sliding-container.isOpen {
+  background-color: #ccc;
+  flex: 1 14%;
+  display: flex;
+  flex-flow: row nowrap;
+  overflow: hidden;
+  transition: all .4s;
+}
+.menu {
+  background-color: rebeccapurple;
+  transition-delay: .5s;
+  z-index: 2;
+}
+.menu.isOpen {
+  flex: 1 0 50%;
+  transition-delay: 0s;
+}
+.sub-menu {
+  background-color: blueviolet;
+  transition-delay: .5s;
+  z-index: 1;
+}
+.sub-menu.isOpen {
+  flex: 1 0 50%;
+  transition-delay: 0s;
+  transition: 0s;
+}
+.sub-menu.slide {
+  /* class used to play the slide animation for sub-menu */
+  flex: 1 0 50%;
+  animation-name: sub-topic-slide;
+  animation-duration: .3s;
+}
