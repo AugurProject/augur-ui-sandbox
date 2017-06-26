@@ -1,9 +1,127 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="UTF-8"/>
     <title>Sidebar Test</title>
+    <link rel="stylesheet" href="./sidebar.css">
   </head>
   <body>
     <h1>Sidebar Test</h1>
+    <div id="root"></div>
+    <script src="https://unpkg.com/react@latest/dist/react.js"></script>
+    <script src="https://unpkg.com/react-dom@latest/dist/react-dom.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+    <script type="text/babel">
+      const data = {
+        topics: ['finance', 'ethereum', 'sports', 'politics', 'science'],
+        subTopics: {
+          'finance': [ 'Trading', 'Forex', 'Crypto', 'USD', 'EUR' ],
+          'ethereum': [ 'ICOs', 'ERC-20', 'Ether', 'GAS Prices', 'PoS' ],
+          'sports': [ 'Football', 'Baseball', 'Soccer', 'Hockey', 'Tennis' ],
+          'politics': [ 'Trump', 'Republicans', 'Democrats', 'Healthcare', 'SCOTUS' ],
+          'science': [ 'Geology', 'Biology', 'Chemistry', 'Physics', 'Astrophysics']
+        }
+      };
+      class SideBar extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            selectedTopic: props.data.topics[0],
+            isMenuOpen: false,
+            slidingSubMenu: false,
+            sideBarClass: 'side-bar',
+            optionsBarClass: 'options-bar',
+            slidingContainerClass: 'sliding-container',
+            menuClass: 'menu',
+            subMenuClass: 'sub-menu',
+          };
+          this.slideContainer = this.slideContainer.bind(this);
+        }
+
+        componentDidUpdate() {
+          const s = this.state;
+          const stl = this.subTopicList;
+
+          if (s.slidingSubMenu) {
+            stl.addEventListener('animationend', () => {
+              this.setState({
+                slidingSubMenu: false,
+                subMenuClass: 'sub-menu isOpen'
+              });
+            }, false);
+          }
+        }
+
+        slideContainer() {
+          if (!this.state.slidingSubMenu) {
+            if (this.state.isMenuOpen) {
+              this.setState({
+                isMenuOpen: false,
+                sideBarClass: 'side-bar',
+                optionsBarClass: 'options-bar',
+                slidingContainerClass: 'sliding-container',
+                menuClass: 'menu',
+                subMenuClass: 'sub-menu',
+              });
+            } else {
+              this.setState({
+                isMenuOpen: true,
+                sideBarClass: 'side-bar isOpen',
+                optionsBarClass: 'options-bar isOpen',
+                slidingContainerClass: 'sliding-container isOpen',
+                menuClass: 'menu isOpen',
+                subMenuClass: 'sub-menu isOpen',
+              });
+            }
+          }
+        }
+
+        toggleSubTopics = topic => {
+          this.setState({
+            selectedTopic: topic,
+            slidingSubMenu: true,
+            subMenuClass: 'sub-menu slide'
+          });
+        }
+
+        render() {
+          const p = this.props.data;
+          const s = this.state;
+
+          return (
+              <article className="page-container">
+                <aside className={s.sideBarClass}>
+                  <aside className='options-bar'>
+                    <a className="button" onClick={this.slideContainer}>topics</a>
+                  </aside>
+                  <div className={s.slidingContainerClass}>
+                      <ul className={s.menuClass}>
+                        {
+                          p.topics.map(topic => {
+                          return (<li key={topic}><a className="button" onClick={() => this.toggleSubTopics(topic)}>{topic}</a></li>)
+                        })
+                        }
+                      </ul>
+                      <ul ref={(ref) => this.subTopicList = ref} className={s.subMenuClass}>
+                        {
+                          p.subTopics[s.selectedTopic].map(subTopic => {
+                          return (<li key={subTopic}>{subTopic}</li>)
+                        })
+                        }
+                      </ul>
+                  </div>
+                </aside>
+                <div ref="content" className='page-content'>
+                  <p>Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content -- Markets Page Content</p>
+                </div>
+              </article>
+          );
+        }
+      };
+      ReactDOM.render(
+          <SideBar data={data}/>,
+        document.getElementById('root')
+      );
+    </script>
   </body>
 </html>
