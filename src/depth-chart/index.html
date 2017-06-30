@@ -8,7 +8,7 @@
   <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
   <script src="http://code.highcharts.com/highcharts.js"></script>
 </head>
-<body style="background-color: lightgrey">
+<body style="background-color: #2d2846">
 <div id="root"></div>
 <script type="text/babel">
   //  TODO Render both lines at the same time
@@ -32,6 +32,9 @@
       [.05, 20],
       [.10, 120],
       [.12, 1430],
+      [.12, 1430],
+      [.12, 1430],
+      [.12, 1430],
       [.13, 130],
       [.14, 130],
       [.145, 130],
@@ -48,6 +51,8 @@
       [.995, 1000],
       [.99, 100],
       [.98, 1000],
+      [.96, 1000],
+      [.95, 1000],
       [.94, 100],
       [.91, 100],
       [.88, 1000],
@@ -65,6 +70,10 @@
   const orderBookTwo = {
     bids: [
       [.02, 200],
+      [.02, 200],
+      [.02, 200],
+      [.02, 200],
+      [.02, 200],
       [.05, 20],
       [.10, 120],
       [.43, 150],
@@ -72,6 +81,9 @@
     ],
     asks: [
       [.995, 1000],
+      [.898, 1000],
+      [.895, 1000],
+      [.89, 1000],
       [.88, 1000],
       [.87, 1000],
       [.64, 10],
@@ -80,23 +92,19 @@
     ]
   };
 
-  const orderBook = Math.random() > .4999 ? orderBookOne : orderBookTwo;
+  const orderBook = /*Math.random() > .4999 ? */orderBookOne //: orderBookTwo;
 //  import noData from 'highcharts/modules/no-data-to-display';
   class OrderBookDepthChart extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
         orderBook: [],
-//        titleXOffset: 0,
-//        titleYOffset: 0,
-//        midPoint: 0
       };
       this.updateChart = this.updateChart.bind(this);
       this.calcSideData = this.calcSideData.bind(this);
     }
 
     componentDidMount() {
-
 //      noData(Highcharts); when back in augur UI repo
       Highcharts.setOptions({
         lang: {
@@ -106,16 +114,15 @@
 
       this.depthChart = new Highcharts.Chart('depth_chart', {
         chart: {
-          backgroundColor: 'lightgrey',
+          backgroundColor: '#2d2846',
           height: 300,
           width: 300,
           margin: 60,
-          type: 'bar',
+          type: 'bar'
         },
         title: {
-          text: '',
           style: {
-            color: '#3F1B76',
+            color: 'white',
             fontSize: '11px'
           },
           align: 'right',
@@ -151,27 +158,52 @@
           {
             showInLegend: false,
             name: '',
-            type: 'line',
-            color: '#3F1B76',
-            lineWidth: 3
+            type: 'area',
+            color: '#7257a3',
+            lineWidth: 3,
+            threshold: null,
+            fillColor: {
+              linearGradient: {
+                x1: 0,
+                y1: 1,
+                x2: 0,
+                y2: 0
+              },
+              stops: [
+                [0, '#2d2846'],
+                [1, '#3c2d63']
+              ]
+            },
           },
           {
             showInLegend: false,
             name: '',
-            type: 'line',
-            color: '#C59FFF',
-            lineWidth: 3
+            type: 'area',
+            color: '#7257a3',
+            lineWidth: 3,
+            threshold: null,
+            fillColor: {
+              linearGradient: {
+                x1: 0,
+                y1: 1,
+                x2: 0,
+                y2: 0
+              },
+              stops: [
+                [0, '#2d2846'],
+                [1, '#3c2d63']
+              ]
+            },
           }
         ],
         tooltip: {
-          headerFormat: null,
+          headerFormat: '<span>Price: {point.x}</span><br>',
           pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y} Shares Available @ {point.x} ETH</b><br/>',
           valueDecimals: 2
         },
         credits: {
           enabled: false
-        },
-        type: 'line'
+        }
       });
 
       this.updateChart();
