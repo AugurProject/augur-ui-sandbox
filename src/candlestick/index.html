@@ -67,6 +67,7 @@
     [1430265600000, 130.16, 131.59, 128.30, 128.64, 32818],
     [1430352000000, 128.64, 127.88, 124.58, 125.15, 3218]
   ];
+
   //  import noData from 'highcharts/modules/no-data-to-display';
   class CandleStickChart extends React.Component {
     constructor(props) {
@@ -78,15 +79,10 @@
 //      noData(Highcharts); when back in augur UI repo
       this.candleStickChart = new Highcharts.stockChart('candlestick_chart', {
         chart: {
-          backgroundColor: '#2d2846',
           borderWidth: 0,
+          backgroundColor: '#2d2846',
           width: 700,
-          height: 500,
-          events: {
-            load: function (event) {
-              console.log(`hiding`);
-            }
-          }
+          height: 500
         },
         rangeSelector: {
           enabled: false
@@ -100,41 +96,36 @@
         lang: {
           noData: 'No Chart Data',
         },
-        borderWidth: 0,
         title: {
-          text: 'Historical Data for \"Will the World End by December 31st, 2017\"'
+          text: ''
         },
         plotOptions: {
           candlestick: {
             dataLabels: {
               enabled: false
-            },
-            shadow: false
+            }
           }
         },
         xAxis: {
-          scrollbar: {
-            enabled: false
-          },
-          shadow: false,
-          borderWidth: 0
+          lineWidth: 0,
+          tickWidth: 0
         },
         yAxis: [{
+          opposite: false,  // place labels on left y-axis
           labels: {
-            align: 'left',
-            x: -3
+            y: 4  // this seems necessary to align labels with gridlines
           },
-          height: '100%',
-          lineWidth: 2,
-          tickLength: 20,
+          lineWidth: 0,
           gridLineColor: '#625e73',
-          gridLineWidth: 2
+          gridLineWidth: 2,
+          tickInterval: 10
         }, {
           // second y-axis: grey volume columns
           labels: {
             align: 'right'
           },
           top: '80%',
+          borderRadius: 3,
           height: '20%',
           offset: 0,
           lineWidth: 2,
@@ -152,11 +143,12 @@
           upLineColor: '#67eec6',
         }, {
           type: 'column',
-          name: '',
+          name: 'Volume',
           color: '#615d73',
           pointWidth: 4,
           yAxis: 1,
-          gridLineWidth:0
+          gridLineWidth:0,
+          borderRadius: 2
         }]
       });
 
