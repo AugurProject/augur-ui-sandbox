@@ -7,7 +7,10 @@
   <script src="https://unpkg.com/react-dom@latest/dist/react-dom.js"></script>
   <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
   <script src="https://code.highcharts.com/stock/highstock.js"></script>
-  <link rel="stylesheet" type="text/css" href="candlestick.css" media="screen"/>
+  <!--<script src="/Users/john/offline/react.js"></script>-->
+  <!--<script src="/Users/john/offline/react-dom.js"></script>-->
+  <!--<script src="/Users/john/offline/babel.min.js"></script>-->
+  <!--<script src="/Users/john/offline/highstock.js"></script>-->
 </head>
 <body>
 <div id="root"></div>
@@ -28,12 +31,12 @@
     [1418860800000, 111.87, 112.65, 110.66, 112.65, 2320],
     [1418947200000, 112.26, 113.24, 111.66, 111.78, 2220],
     [1419206400000, 112.16, 113.49, 111.97, 112.94, 2340],
-    [1419292800000, 113.23, 113.33, 112.46, 112.54, 2350],
-    [1419379200000, 112.58, 112.71, 112.01, 112.01, 2310],
+    [1419292800000, 113.23, 113.33, 112.46, 112.54, 23150],
+    [1419379200000, 112.58, 112.71, 112.01, 112.01, 23610],
     [1419552000000, 112.10, 114.52, 112.01, 113.99, 1340],
-    [1419811200000, 113.79, 114.77, 113.70, 113.91, 2340],
-    [1419897600000, 113.64, 113.92, 112.11, 112.52, 2340],
-    [1419984000000, 112.82, 113.13, 110.21, 110.38, 2340],
+    [1419811200000, 113.79, 114.77, 113.70, 113.91, 23430],
+    [1419897600000, 113.64, 113.92, 112.11, 112.52, 26340],
+    [1419984000000, 112.82, 113.13, 110.21, 110.38, 26340],
     [1420156800000, 111.39, 111.44, 107.35, 109.33, 1200],
     [1420416000000, 108.29, 108.65, 105.41, 106.25, 11200],
     [1420502400000, 106.54, 107.43, 104.63, 106.26, 100],
@@ -44,37 +47,30 @@
     [1421107200000, 111.43, 112.80, 108.91, 110.22, 1200],
     [1421193600000, 109.04, 110.49, 108.50, 109.80, 12800],
     [1421280000000, 110.00, 110.06, 106.66, 106.82, 1200],
-    [1421366400000, 107.03, 107.58, 105.20, 105.99, 200],
+    [1421366400000, 107.03, 107.58, 105.20, 105.99, 23200],
     [1421712000000, 107.84, 108.97, 106.50, 108.72, 1200],
     [1421798400000, 108.95, 111.06, 108.27, 109.55, 1200],
     [1421884800000, 110.26, 112.47, 109.72, 112.40, 1200],
     [1421971200000, 112.30, 113.75, 111.53, 112.98, 1200],
     [1422230400000, 113.74, 114.36, 112.80, 113.10, 1200],
     [1422316800000, 112.42, 112.48, 109.03, 109.14, 12050],
-    [1422403200000, 117.62, 118.12, 115.31, 115.31, 1200],
+    [1422403200000, 117.62, 118.12, 115.31, 115.31, 122300],
     [1422489600000, 116.32, 119.19, 115.56, 118.90, 1200],
-    [1422576000000, 118.40, 120.00, 116.85, 117.16, 1200],
+    [1422576000000, 118.40, 120.00, 116.85, 117.16, 123200],
     [1429488000000, 125.57, 128.12, 125.17, 127.60, 33218],
     [1429574400000, 128.10, 128.20, 126.67, 126.91, 3218],
     [1429660800000, 126.99, 128.87, 126.32, 128.62, 36218],
     [1429747200000, 128.30, 130.42, 128.14, 129.67, 3218],
     [1429833600000, 130.49, 130.63, 129.23, 130.28, 37218],
-    [1430092800000, 132.31, 133.13, 131.15, 132.65, 3218],
-    [1430179200000, 134.46, 134.54, 129.57, 130.56, 3218],
+    [1430092800000, 132.31, 133.13, 131.15, 132.65, 32318],
+    [1430179200000, 134.46, 134.54, 129.57, 130.56, 32218],
     [1430265600000, 130.16, 131.59, 128.30, 128.64, 32818],
     [1430352000000, 128.64, 127.88, 124.58, 125.15, 3218]
   ];
   //  import noData from 'highcharts/modules/no-data-to-display';
-
-  //  TODO (to match design reference as of 6/22/17)
-  //  beginning / end date
-  //  custom dropdown
-  //  remove scrollbar
-
   class CandleStickChart extends React.Component {
     constructor(props) {
       super(props);
-
       this.getVolumeFromOrderBook = this.getVolumeFromOrderBook.bind(this);
     }
 
@@ -84,13 +80,22 @@
         chart: {
           backgroundColor: '#2d2846',
           borderWidth: 0,
-          width: 500,
-          height: 400
+          width: 700,
+          height: 500,
+          events: {
+            load: function (event) {
+              console.log(`hiding`);
+            }
+          }
         },
         rangeSelector: {
-          // index of range selector to default to.
-          // If this is to high we will select an option that doesn't exist because some markets will not last long
-          selected: 6
+          enabled: false
+        },
+        buttonTheme: {
+          visibility: 'hidden'
+        },
+        labelStyle: {
+          visibility: 'hidden'
         },
         lang: {
           noData: 'No Chart Data',
@@ -109,7 +114,7 @@
         },
         xAxis: {
           scrollbar: {
-            enabled: true
+            enabled: false
           },
           shadow: false,
           borderWidth: 0
@@ -119,17 +124,23 @@
             align: 'left',
             x: -3
           },
-          height: '80%',
-          lineWidth: 2
+          height: '100%',
+          lineWidth: 2,
+          tickLength: 20,
+          gridLineColor: '#625e73',
+          gridLineWidth: 2
         }, {
+          // second y-axis: grey volume columns
           labels: {
-            align: 'right',
-//          TODO format date with formatDate util  format: '{value} km'
+            align: 'right'
           },
-          top: '65%',
+          top: '80%',
           height: '20%',
           offset: 0,
-          lineWidth: 2
+          lineWidth: 2,
+          minorGridLineWidth: 0,
+          gridLineWidth: 0,
+          lineColor: 'transparent'
         }],
         series: [{
           type: 'candlestick',
@@ -139,23 +150,13 @@
           lineColor: '#ef5134',
           upColor: '#67eec6',
           upLineColor: '#67eec6',
-          dataGrouping: {
-            units: [
-              [
-                'week',
-                [1]
-              ], [
-                'month',
-                [1, 2, 3, 4, 6]
-              ]
-            ]
-          }
         }, {
           type: 'column',
           name: '',
-          color: '#EDEEF1',
-          pointWidth: 3,
-          yAxis: 1
+          color: '#615d73',
+          pointWidth: 4,
+          yAxis: 1,
+          gridLineWidth:0
         }]
       });
 
