@@ -82,6 +82,7 @@
 //      noData(Highcharts); when back in augur UI repo
       this.candleStickChart = new Highcharts.stockChart('candlestick_chart', {
         chart: {
+          backgroundColor: '#2d2846',
           borderWidth: 0,
           width: 500,
           height: 400
@@ -133,7 +134,7 @@
         series: [{
           type: 'candlestick',
           name: 'Pricing Data',
-          maxPointWidth: 4,
+          maxPointWidth: 3,
           color: '#ef5134',
           lineColor: '#ef5134',
           upColor: '#67eec6',
@@ -153,7 +154,7 @@
           type: 'column',
           name: '',
           color: '#EDEEF1',
-          pointWidth: 4,
+          pointWidth: 3,
           yAxis: 1
         }]
       });
