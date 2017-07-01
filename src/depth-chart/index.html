@@ -97,15 +97,12 @@
   class OrderBookDepthChart extends React.Component {
     constructor(props) {
       super(props);
-      this.state = {
-        orderBook: [],
-      };
       this.updateChart = this.updateChart.bind(this);
       this.calcSideData = this.calcSideData.bind(this);
     }
 
     componentDidMount() {
-//      noData(Highcharts); when back in augur UI repo
+//      noData(Highcharts); TODO when back in augur UI repo
       Highcharts.setOptions({
         lang: {
           thousandsSep: ','
@@ -115,10 +112,9 @@
       this.depthChart = new Highcharts.Chart('depth_chart', {
         chart: {
           backgroundColor: '#2d2846',
-          height: 300,
-          width: 300,
-          margin: 60,
-          type: 'bar'
+          height: 350,
+          width: 350,
+          type: 'bar',
         },
         title: {
           style: {
@@ -138,9 +134,20 @@
           title: {
             text: ''
           },
-          tickInterval: .50,
           max: 1,
-          reverse: true
+          reverse: true,
+          tickWidth: 0,
+          lineWidth: 0,
+          minorGridLineWidth: 0,
+          lineColor: 'transparent',
+          minorTickLength: 0,
+          tickLength: 0,
+          crosshair: {
+            //  dashStyle: 'dash', TODO dashStyle could be nice, especially with width: 1, perhaps
+            width: 3,
+            color: '#7257a3',
+            zIndex: 22
+          }
         },
         yAxis: {
           title: {
@@ -152,6 +159,12 @@
           labels: {
             align: 'bottom',
             verticalAlign: 'bottom'
+          },
+          crosshair: {
+            //  dashStyle: 'dash', TODO dashStyle could be nice, especially with width: 1, perhaps
+            width: 3,
+            color: '#7257a3',
+            zIndex: 22
           }
         },
         series: [
@@ -177,7 +190,7 @@
           },
           {
             showInLegend: false,
-            name: '',
+            name: '', // TODO correct thing to display?  Needs to be same as series[0]
             type: 'area',
             color: '#7257a3',
             lineWidth: 3,
@@ -197,9 +210,18 @@
           }
         ],
         tooltip: {
-          headerFormat: '<span>Price: {point.x}</span><br>',
-          pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y} Shares Available @ {point.x} ETH</b><br/>',
-          valueDecimals: 2
+//          pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y} Shares Available <br />@ {point.x} ETH</b><br/>',
+          valueSuffix: '',
+          formatter: function() {
+            return this.point.y + " Shares Available @" + this.point.x + "ETH";
+          },
+          valueDecimals: 2,
+          positioner: function () {
+            return { x: 150, y: 130 };
+          },
+          shadow: false,
+          borderWidth: 0,
+          backgroundColor: 'rgba(255,255,255,0.5)'
         },
         credits: {
           enabled: false
