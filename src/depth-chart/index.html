@@ -11,8 +11,7 @@
 <body style="background-color: #2d2846">
 <div id="root"></div>
 <script type="text/babel">
-  //  TODO Render both lines at the same time
-  const shortBook = {
+  const uglyIlliquidOrderBook = {
     bids: [
       [.02, 200],
       [.40, 10],
@@ -92,7 +91,7 @@
     ]
   };
 
-  const orderBook = /*Math.random() > .4999 ? */orderBookOne //: orderBookTwo;
+  const orderBook = Math.random() > .4999 ? orderBookOne : Math.random() > .5 ? uglyIlliquidOrderBook : orderBookTwo;
 //  import noData from 'highcharts/modules/no-data-to-display';
   class OrderBookDepthChart extends React.Component {
     constructor(props) {
@@ -143,8 +142,9 @@
           minorTickLength: 0,
           tickLength: 0,
           crosshair: {
-            //  dashStyle: 'dash', TODO dashStyle could be nice, especially with width: 1, perhaps
-            width: 3,
+//          width: 3,
+            dashStyle: 'dash',
+            width: 1,
             color: '#7257a3',
             zIndex: 22
           }
@@ -153,6 +153,7 @@
           title: {
             text: ''
           },
+          min: 0, // can't do anything with less than 0 shares
           showLastLabel: true,
           gridLineWidth: 0,
           minorGridLineWidth: 0,
@@ -161,8 +162,9 @@
             verticalAlign: 'bottom'
           },
           crosshair: {
-            //  dashStyle: 'dash', TODO dashStyle could be nice, especially with width: 1, perhaps
-            width: 3,
+//          width: 3,
+            dashStyle: 'dash',
+            width: 1,
             color: '#7257a3',
             zIndex: 22
           }
@@ -217,11 +219,11 @@
           },
           valueDecimals: 2,
           positioner: function () {
-            return { x: 150, y: 130 };
+            return { x: 180, y: 130 };
           },
           shadow: false,
           borderWidth: 0,
-          backgroundColor: 'rgba(255,255,255,0.5)'
+          backgroundColor: 'rgba(255,255,255,0.4)'
         },
         credits: {
           enabled: false
@@ -296,7 +298,6 @@
           <article
               className="order-book-chart"
           >
-            <h1>Market Depth</h1>
             <div
                 id="depth_chart"
             />
