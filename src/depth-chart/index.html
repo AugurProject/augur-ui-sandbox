@@ -81,14 +81,7 @@
           type: 'bar',
         },
         title: {
-          style: {
-            color: 'white',
-            fontSize: '11px'
-          },
-          align: 'right',
-          x: -1750,
-          verticalAlign: 'bottom',
-          y: -150,
+//          TODO title; probably as mid point
         },
         lang: {
           thousandsSep: ',',
@@ -99,7 +92,6 @@
             text: ''
           },
           max: 1,
-          reverse: true,
           tickWidth: 0,
           lineWidth: 0,
           minorGridLineWidth: 0,
@@ -249,7 +241,7 @@
       const data = [];
       const firstShares = sideSeries[0][1];
       const firstPrice = sideSeries[0][0];
-      data.push([firstPrice, firstShares]);// seed so we have the first cumulative numShares
+      data.push([firstPrice, firstShares]); // so we have the first cumulative numShares
 
       for (let i = 1; i < sideSeries.length; i++) {
         const order = [];
