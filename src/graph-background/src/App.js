@@ -22,17 +22,25 @@ class App extends Component {
 
       this.circles = [];
       this.lines = [];
+      this.circleCount = 100;
+      this.dotSize = 3;
+      this.idealScreen = 1440;
+      this.screenScale = Math.max(width, height) / 1440;
       this.screenMid = {
         x: width / 2,
         y: height / 2
       };
 
-      for (let i = 0; i < 30; i++) {
+      for (let i = 0; i < this.circleCount; i++) {
+        const angle = Math.random() * 360;
+        const rads = angle * (Math.PI / 180);
+        const distScalar = 1 - Math.pow(i / this.circleCount, 1.9);
+        const dist = distScalar * Math.min(this.screenMid.x, this.screenMid.y);
         const origin = {
-          x: Math.random() * width,
-          y: Math.random() * height
+          x: this.screenMid.x + (Math.cos(rads) * dist),
+          y: this.screenMid.y + (Math.sin(rads) * dist)
         };
-        this.circles.push({ origin, x: origin.x, y: origin.y });
+        this.circles.push({ origin, x: origin.x, y: origin.y, dist, angle, links: 0 });
       }
 
       this.circles.forEach((circleA, ai) => {
@@ -41,11 +49,18 @@ class App extends Component {
           const linekey = [ai, bi].sort().join('_');
           if (this.lines[linekey]) return;
 
-          const dist = pythagoreanDistance(circleA.origin, circleB.origin);
+          const pDist = pythagoreanDistance(circleA.origin, circleB.origin);
+          const centerDist = circleA.dist - circleB.dist;
 
-          if (dist < 250) {
+          const localLink = pDist < (80 * this.screenScale);
+          const tierLink = Math.abs(centerDist > 3 && centerDist < 5);
+          //const dotLink = ;
+
+          if (localLink || tierLink) {
             const linekey = [ai, bi].sort().join('_');
             this.lines[linekey] = { circleIndices: [ ai, bi ] };
+            this.circles[ai].links += 1;
+            this.circles[bi].links += 1;
           }
         });
       });
@@ -64,7 +79,8 @@ class App extends Component {
         circle.x = x + wobX;
         circle.y = y + wobY;
 
-        p.ellipse( x + wobX, y + wobY, 20, 20 );
+        const circleSize = (this.dotSize + (circle.links * 0.8)) * this.screenScale;
+        p.ellipse(x + wobX, y + wobY, circleSize, circleSize);
       });
 
       p.stroke('#534C65');
